@@ -24,21 +24,19 @@ console.log('Server listening on port 3000');
 
 // Proxy Socket Server
 var proxySocket = io.listen(server),
-	WebSocket = require('websocket-client').WebSocket,
-	connectionsToDestination = [];
+	Broadway = require('./Broadway').Broadway;
 
 proxySocket.on('connection', function(client) {
 	console.log('CONNECTION received by proxy from client');
 
-	// connection from proxy to destination ws server
-	var destination = new WebSocket('ws://localhost:8080/socket', "broadway");
-	destination.onmessage = function(event) {
-		client.send(event.data);
-	};
+	var broadway = new Broadway();
+	broadway.on('message', function(msg) {
+		client.send(msg);
+	});
 
-	// connection from proxy to client
 	client.on('message', function(msg) {
-		destination.send(msg);
+		broadway.send(msg);
 	});
 	
+	broadway.connect();
 });
