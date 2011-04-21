@@ -2551,6 +2551,7 @@
 
 	/* Translate DOM keyPress event to keysym value */
 	function getKeysym(ev) {
+		ev = ev ? ev : window.event;
 		var keysym, msg;
 
 		keysym = getEventKeySym(ev);
@@ -2566,6 +2567,7 @@
 	}
 
 	function copyKeyEvent(ev) {
+		ev = ev ? ev : window.event;
 		var members = ['type', 'keyCode', 'charCode', 'which',
 			   'altKey', 'ctrlKey', 'shiftKey',
 			   'keyLocation', 'keyIdentifier'], i, obj = {};
@@ -2595,6 +2597,7 @@
 	}
 
 	function ignoreKeyEvent(ev) {
+		ev = ev ? ev : window.event;
 		// Blarg. Some keys have a different keyCode on keyDown vs keyUp
 		if (ev.keyCode === 229) {
 		// French AZERTY keyboard dead key.
@@ -2687,6 +2690,7 @@
 	}
 
 	function onKeyDown (ev) {
+		ev = ev ? ev : window.event;
 		updateForEvent(ev);
 		if (localGrab)
 		return cancelEvent(ev);
@@ -2694,6 +2698,7 @@
 	}
 
 	function onKeyPress(ev) {
+		ev = ev ? ev : window.event;
 		updateForEvent(ev);
 		if (localGrab)
 		return cancelEvent(ev);
@@ -2701,6 +2706,7 @@
 	}
 
 	function onKeyUp (ev) {
+		ev = ev ? ev : window.event;
 		updateForEvent(ev);
 		if (localGrab)
 		return cancelEvent(ev);
@@ -2722,6 +2728,7 @@
 
 	function onMouseWheel(ev)
 	{
+		ev = ev ? ev : window.event;
 		updateForEvent(ev);
 		if (localGrab)
 		return false;
