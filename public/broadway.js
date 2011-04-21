@@ -2761,7 +2761,7 @@
 
 	function connect()
 	{
-		var ws = new io.Socket('localhost');
+		var ws = new io.Socket('10.0.10.252');
 		ws.connect();
 		ws.on('connect', function() {
 			console.log('connected!');
