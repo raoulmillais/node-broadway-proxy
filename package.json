@@ -11,7 +11,8 @@
     "jade": "0.10.4",
     "socket.io": "0.6.17",
 	"websocket-client": "1.0.0",
-	"eyes": "0.1.6"
+	"eyes": "0.1.6",
+	"vows": "0.5.8"
   },
   "keywords": ["gtk", "javascript", "gnome", "browadway"],
   "repository": "git://github.com/raoulmillais/node-broadway-proxy.git",
