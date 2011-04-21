@@ -38,7 +38,7 @@ Broadway.prototype.getGtkApplicationExecutableArgs = function getGtkApplicationE
  */
 Broadway.prototype.connect = function connect() {
 	// TODO: Copy parent process env?
-	var broadwayEnv = { 'GDK_BACKEND': 'broadway', 'BROADWAY_PORT': this.getPort() },
+	var broadwayEnv = { 'GDK_BACKEND': 'broadway', 'BROADWAY_DISPLAY': this.getPort() },
 		that = this;
 	
 	console.log('Spawning broadway process');
