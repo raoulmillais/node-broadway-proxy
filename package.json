@@ -1,0 +1,19 @@
+{
+  "name": "broadway proxy",
+  "description": "Nodejs proxy for broadway gdk backend allowing use of socket.io for greater browser compatibility",
+  "version": "0.1",
+  "author": "Raoul Millais <raoul@raoulmillais.com>",
+  "contributors": [ 
+    { "name": "Andres Aragoneses", "email": "knocte@gmail.com" }, 
+  ],
+  "dependencies": {
+    "express": "2.2.2",
+    "jade": "0.10.4",
+    "socket.io": "0.6.17",
+	"websocket-client": "1.0.0"
+  },
+  "keywords": ["gtk", "javascript", "gnome", "browadway"],
+  "repository": "git://github.com/raoulmillais/node-broadway-proxy.git",
+  "main": "server",
+  "engines": { "node": ">= 0.4.6 < 0.5.0" }
+}
