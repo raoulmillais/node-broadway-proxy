@@ -1,3 +1,5 @@
+"use strict";
+
 var util = require('util'),
 	events = require('events'),
 	spawn = require('child_process').spawn,
