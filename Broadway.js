@@ -1,27 +1,36 @@
 var util = require('util'),
 	events = require('events'),
 	spawn = require('child_process').spawn,
-	WebSocket = require('websocket-client').WebSocket;
+	WebSocket = require('websocket-client').WebSocket,
+	currentport = 50000;
 
 /*
  * Ctor
  */
 function Broadway(options) {
-	if (!(this instanceof Broadway)) {
-		return new Broadway();
+	this.options = options || {};
+	if (!this.options.port) {
+		this.options.port = Broadway.getNextPort();
 	}
 
-	this.options = options || {};
+	this.processEnv = { 'GDK_BACKEND': 'broadway', 'BROADWAY_DISPLAY': this.getPort() };
 	events.EventEmitter.call(this);
 };
 
 util.inherits(Broadway, events.EventEmitter);
 
 /*
+ * Static Methods
+ */
+Broadway.getNextPort = function() {
+	return currentport++;
+}
+
+/*
  * Properties
  */
 Broadway.prototype.getPort = function getPort() {
-	return this.options.port  || 8080;	
+	return this.options.port;	
 };
 
 Broadway.prototype.getGtkApplicationExectutable = function getGtkApplicationExectutable() {
@@ -38,30 +47,29 @@ Broadway.prototype.getGtkApplicationExecutableArgs = function getGtkApplicationE
  */
 Broadway.prototype.connect = function connect() {
 	// TODO: Copy parent process env?
-	var broadwayEnv = { 'GDK_BACKEND': 'broadway', 'BROADWAY_DISPLAY': this.getPort() },
-		that = this;
+	var that = this,
+		processStartDelay = 1000;
 	
-	console.log('Spawning broadway process');
 	this.process = spawn(this.getGtkApplicationExectutable(), 
 						 this.getGtkApplicationExecutableArgs(), 
-						 { env: broadwayEnv });
+						 { env: this.processEnv });
 
 	this.process.stderr.on('data', function onBroadwayError(data) {
-		console.log('ERROR from broadway process: ' + data);
+		console.log(this.getPort() + ': BROADWAY STDERR: ' + data);
 		that.disconnect();
 	});
 	this.process.stdout.on('data', function onBroadwayOutput(data) {
-		console.log('Broadway stdout: ' + data);
+		console.log(this.getPort() + ': BROADWAY STDOUT: ' + data);
 	});
 
 	setTimeout(function() {
 		var self = that;
-		console.log('Connecting to broadway via websocket: ' + 'ws://localhost:' + self.getPort() + '/socket');
+		console.log(self.getPort() + 'CONNECTED');
 		self.webSocket = new WebSocket('ws://localhost:' + self.getPort() + '/socket', "broadway");
 		self.webSocket.onmessage = function socketDataReceived(event) {
 			self.emit('message', event.data);
 		};
-	}, 1000);
+	}, processStartDelay);
 };
 
 Broadway.prototype.disconnect = function disconnect() {

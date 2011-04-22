@@ -5,8 +5,8 @@ var vows = require('vows'),
 
 vows.describe('Broadway').addBatch({
 	'A new instance': {
-		topic : new(Broadway),
-		'should default the port to 8080': function(broadway) {
+		topic : new Broadway({ port: 8080 }),
+		'should set the port': function(broadway) {
 			assert.equal(broadway.getPort(), 8080);
 		},
 		'should default the gtk application to the demo': function(broadway) {
@@ -15,24 +15,37 @@ vows.describe('Broadway').addBatch({
 		'should default the gtk application args to empty': function(broadway) {
 			assert.isArray(broadway.getGtkApplicationExecutableArgs());
 			assert.isEmpty(broadway.getGtkApplicationExecutableArgs());
+		},
+		'should set environment for child process': function(broadway) {
+			assert.isNotNull(broadway.processEnv);
+		}
+	},
+
+	'Assigning ports': {
+		topic: function() { 
+			return Broadway.getNextPort();
+		},
+		'next port should increment by one ': function(originalport) {
+			var nextport = Broadway.getNextPort();
+			assert.equal(nextport - originalport, 1);
 		}
 	},
 
 	'When connecting': {
 		topic: function() {
-			var broadway = new Broadway();
+			var broadway = new Broadway({ port: 8080 });
 			broadway.connect();
 			return broadway;
 		},
 		'Should spawn a new gtk process': function(broadway) {
 			assert.isNotNull(broadway.process.pid, 'process pid was null');
 			assert.isFalse(broadway.process.killed, 'process was killed');
-		} 
+		}
 	},
 
 	'When disconnecting': {
 		topic: function() {
-			var broadway = new Broadway();
+			var broadway = new Broadway({ port: 8080 });
 			broadway.connect();
 			broadway.on('disconnect', this.callback);
 			broadway.disconnect();
